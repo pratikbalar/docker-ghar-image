@@ -19,7 +19,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: pratikimprowise/ghar-image
+          images: improwised/ghar-image
           tags: |
             type=raw,value={{branch}}-{{sha}}-{{date 'X'}}
             type=raw,value=latest
@@ -33,7 +33,7 @@ jobs:
           tags='${{ steps.meta.outputs.tags }}'
           export IFS=$'\n'
           tmp_tag="${{ github.run_id }}-${{ github.run_number }}-${{ github.sha }}"
-          docker build -t $tmp_tag .
+          docker buildx build -t $tmp_tag .
           for tag in $tags; do docker tag $tmp_tag $tag; done
 
       - name: Image Push
