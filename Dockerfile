@@ -2,10 +2,8 @@ ARG BASE_IMAGE="summerwind/actions-runner-dind"
 ARG BASE_IMAGE_TAG="v2.283.3-ubuntu-20.04"
 FROM $BASE_IMAGE:$BASE_IMAGE_TAG
 USER root
-ARG GO_VER="1.17.2-buster"
-ARG COMPOSE_VER="2.1.9"
-COPY --from=golang:${GO_VER} "/usr/local/go/" "/usr/local/go/"
-COPY --from=composer:${COMPOSE_VER} "/usr/bin/composer" "/usr/local/bin/composer"
+COPY --from=golang:1.16-buster "/usr/local/go/" "/usr/local/go/"
+COPY --from=composer:2.1.9 "/usr/bin/composer" "/usr/local/bin/composer"
 RUN set -ex; \
   apt-get update; \
   apt-get install --no-install-recommends --no-install-suggests -y \
