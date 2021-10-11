@@ -5,6 +5,7 @@ USER root
 COPY --from=golang:1.16-buster "/usr/local/go/" "/usr/local/go/"
 COPY --from=composer:2.1.9 "/usr/bin/composer" "/usr/local/bin/composer"
 RUN set -ex; \
+  curl -sL https://deb.nodesource.com/setup_14.x | bash -; \
   apt-get update; \
   apt-get install --no-install-recommends --no-install-suggests -y \
   php php-apcu php-bcmath php-dom php-ctype php-curl php-exif php-fileinfo php-fpm \
@@ -12,6 +13,7 @@ RUN set -ex; \
   php-redis php-mysqli php-opcache php-pdo php-phar php-posix php-simplexml \
   php-sockets php-sqlite3 php-tidy php-tokenizer php-xml php-xmlwriter php-zip \
   php-pear libgd-tools \
+  nodejs \
   git unzip; \
   apt-get clean autoclean; \
   apt-get autoremove --yes
