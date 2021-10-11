@@ -6,6 +6,8 @@ COPY --from=golang:1.17-buster "/usr/local/go/" "/usr/local/go/"
 COPY --from=composer:2.1.9 "/usr/bin/composer" "/usr/local/bin/composer"
 RUN set -ex; \
   curl -sL https://deb.nodesource.com/setup_14.x | bash -; \
+  curl https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry -o /usr/bin/retry; \
+  chmod +x /usr/bin/retry; \
   apt-get update; \
   apt-get install --no-install-recommends --no-install-suggests -y \
   php php-apcu php-bcmath php-dom php-ctype php-curl php-exif php-fileinfo php-fpm \
