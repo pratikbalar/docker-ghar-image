@@ -16,7 +16,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Docker meta
-        if: ${{ steps.branch.outputs.branch == 'true' }}
         id: meta
         uses: docker/metadata-action@v3
         with:
@@ -26,7 +25,6 @@ jobs:
             type=raw,value=latest
 
       - name: Add retry
-        if: ${{ steps.branch.outputs.branch == 'true' }}
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 1
@@ -36,12 +34,10 @@ jobs:
           command: curl https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry -o /runner/retry && chmod +x /runner/retry
 
       - name: Docker login
-        if: ${{ steps.branch.outputs.branch == 'true' }}
         id: docker-login
         run: /runner/retry -t 3 -s 10 "docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}"
 
       - name: Image Build
-        if: ${{ steps.branch.outputs.branch == 'true' }}
         run: |
           tags='${{ steps.meta.outputs.tags }}'
           export IFS=$'\n'
@@ -50,7 +46,6 @@ jobs:
           for tag in $tags; do docker tag $tmp_tag $tag; done
 
       - name: Image Push
-        if: ${{ steps.branch.outputs.branch == 'true' }}
         run: |
           tags='${{ steps.meta.outputs.tags }}'
           export IFS=$'\n'
