@@ -1,0 +1,79 @@
+name: image-build
+on:
+  push:
+    paths:
+      - "Dockerfile"
+      - ".github/workflows/image-build.yaml"
+
+jobs:
+  image-build:
+    timeout-minutes: 30
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Docker meta
+        if: ${{ steps.branch.outputs.branch == 'true' }}
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: pratikimprowise/ghar-image
+          tags: |
+            type=raw,value={{branch}}-{{sha}}-{{date 'X'}}
+            type=raw,value=latest
+
+      - name: Add retry
+        if: ${{ steps.branch.outputs.branch == 'true' }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 1
+          max_attempts: 3
+          retry_on: error
+          shell: bash
+          command: curl https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry -o /runner/retry && chmod +x /runner/retry
+
+      - name: Docker login
+        if: ${{ steps.branch.outputs.branch == 'true' }}
+        id: docker-login
+        run: /runner/retry -t 3 -s 10 "docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}"
+
+      - name: Image Build
+        if: ${{ steps.branch.outputs.branch == 'true' }}
+        run: |
+          tags='${{ steps.meta.outputs.tags }}'
+          export IFS=$'\n'
+          tmp_tag="${{ github.run_id }}-${{ github.run_number }}-${{ github.sha }}"
+          /runner/retry -t 3 -s 10 "docker build -t $tmp_tag ."
+          for tag in $tags; do docker tag $tmp_tag $tag; done
+
+      - name: Image Push
+        if: ${{ steps.branch.outputs.branch == 'true' }}
+        run: |
+          tags='${{ steps.meta.outputs.tags }}'
+          export IFS=$'\n'
+          for tag in $tags; do /runner/retry -t 3 -s 10 "docker push $tag"; done
+
+      - name: Post Docker login
+        if: ${{ steps.docker-login.outcome == 'success' }}
+        run: /runner/retry -t 3 -s 10 "docker logout"
+
+      # - name: Slack Notification
+      #   uses: lazy-actions/slatify@master
+      #   continue-on-error: true
+      #   if: always()
+      #   with:
+      #     type: ${{ job.status }}
+      #     job_name: "*Apricot API CI*"
+      #     channel: "#apricot2"
+      #     url: ${{ secrets.SLACK_WEBHOOK }}
+      #     commit: true
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Docker Hub Status
+        if: failure() || cancelled()
+        uses: crazy-max/ghaction-docker-status@v1
+        with:
+          overall_threshold: degraded_performance

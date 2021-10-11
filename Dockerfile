@@ -2,7 +2,7 @@ ARG BASE_IMAGE="summerwind/actions-runner-dind"
 ARG BASE_IMAGE_TAG="v2.283.3-ubuntu-20.04"
 FROM $BASE_IMAGE:$BASE_IMAGE_TAG
 USER root
-COPY --from=golang:1.16-buster "/usr/local/go/" "/usr/local/go/"
+COPY --from=golang:1.17-buster "/usr/local/go/" "/usr/local/go/"
 COPY --from=composer:2.1.9 "/usr/bin/composer" "/usr/local/bin/composer"
 RUN set -ex; \
   curl -sL https://deb.nodesource.com/setup_14.x | bash -; \
@@ -20,6 +20,7 @@ RUN set -ex; \
   # rm -rf /var/lib/{apt,dpkg,cache,log}/
 ENV PATH="/usr/local/go/bin:${PATH}"
 USER runner
+ENV PATH="/usr/local/go/bin:${PATH}"
 RUN go version; \
     php -v
 # remaining
