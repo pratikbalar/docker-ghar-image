@@ -1,13 +1,24 @@
-ARG BASE_IMAGE="summerwind/actions-runner-dind"
-ARG BASE_IMAGE_TAG="v2.283.3-ubuntu-20.04"
-FROM $BASE_IMAGE:$BASE_IMAGE_TAG
+ARG RUNNER=v2.284.0-ubuntu-20.04
+ARG GOLANG=1.17-buster
+ARG COMPOSER=2.1.9
+ARG GIT=latest
+
+FROM docker.io/library/golang:${GOLANG} as golang
+FROM docker.io/library/composer:${COMPOSER} as composer
+FROM docker.io/bitnami/git:${GIT} as binaries
+WORKDIR /bins
+RUN \
+  curl -Lo retry https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry; \
+  curl -Lo kind  https://github.com/kubernetes-sigs/kind/releases/download/v0.11.1/kind-linux-amd64; \
+  chmod +x -R /bins/
+FROM docker.io/summerwind/actions-runner-dind:${RUNNER}
 USER root
-COPY --from=golang:1.17-buster "/usr/local/go/" "/usr/local/go/"
-COPY --from=composer:2.1.9 "/usr/bin/composer" "/usr/local/bin/composer"
-RUN set -ex; \
+COPY --from=golang    "/usr/local/go/"      "/usr/local/go/"
+COPY --from=composer  "/usr/bin/composer/"  "/usr/local/bin/composer/"
+COPY --from=binaries  "/bins/"              "/usr/local/bin/"
+
+RUN set -x; \
   curl -sL https://deb.nodesource.com/setup_14.x | bash -; \
-  curl https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry -o /usr/bin/retry; \
-  chmod +x /usr/bin/retry; \
   apt-get update; \
   apt-get install --no-install-recommends --no-install-suggests -y \
   php php-apcu php-bcmath php-dom php-ctype php-curl php-exif php-fileinfo php-fpm \
@@ -23,12 +34,10 @@ RUN set -ex; \
 ENV PATH="/usr/local/go/bin:${PATH}"
 USER runner
 ENV PATH="/usr/local/go/bin:${PATH}"
-RUN go version; \
-    php -v
 # remaining
 # php-mcrypt
 # php-openssl
-# php-pcntl
+# php-pcntl t
 # php-pdo_mysql
 # php-session
 # php-zlib
