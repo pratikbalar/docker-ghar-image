@@ -46,18 +46,6 @@ jobs:
         if: ${{ steps.docker-login.outcome == 'success' }}
         run: docker logout
 
-      # - name: Slack Notification
-      #   uses: lazy-actions/slatify@master
-      #   continue-on-error: true
-      #   if: always()
-      #   with:
-      #     type: ${{ job.status }}
-      #     job_name: "*Apricot API CI*"
-      #     channel: "#apricot2"
-      #     url: ${{ secrets.SLACK_WEBHOOK }}
-      #     commit: true
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Check Docker Hub Status
         if: failure() || cancelled()
         uses: crazy-max/ghaction-docker-status@v1
