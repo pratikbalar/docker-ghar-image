@@ -1,17 +1,12 @@
-ARG RUNNER=v2.284.0-ubuntu-20.04
-ARG GOLANG=1.17-buster
-ARG COMPOSER=2.1.9
-ARG GIT=latest
-
-FROM docker.io/library/golang:${GOLANG} as golang
-FROM docker.io/library/composer:${COMPOSER} as composer
-FROM docker.io/bitnami/git:${GIT} as binaries
+FROM docker.io/library/golang:1.17-buster as golang
+FROM docker.io/library/composer:2.1.9 as composer
+FROM docker.io/bitnami/git:latest as binaries
 WORKDIR /bins
 RUN \
   curl -Lo retry https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry; \
   curl -Lo kind  https://github.com/kubernetes-sigs/kind/releases/download/v0.11.1/kind-linux-amd64; \
   chmod +x -R /bins/
-FROM docker.io/summerwind/actions-runner-dind:${RUNNER}
+FROM docker.io/summerwind/actions-runner-dind:v2.284.0-ubuntu-20.04
 USER root
 COPY --from=golang    "/usr/local/go/"      "/usr/local/go/"
 COPY --from=composer  "/usr/bin/composer/"  "/usr/local/bin/composer/"
