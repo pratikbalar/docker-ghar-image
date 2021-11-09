@@ -22,7 +22,6 @@
     }
   ],
   "packageRules": [
-    // setup datasources
     {
       "enabled": true,
       "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
@@ -33,7 +32,6 @@
       "semanticCommitScope": "deps",
       "separateMinorPatch": true
     },
-    // add labels according to package and update types
     {
       "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
       "matchUpdateTypes": ["major"],
