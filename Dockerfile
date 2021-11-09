@@ -3,7 +3,7 @@ ARG BASE_IMAGE_TAG="v2.283.3-ubuntu-20.04"
 FROM $BASE_IMAGE:$BASE_IMAGE_TAG
 USER root
 COPY --from=golang:1.17-buster "/usr/local/go/" "/usr/local/go/"
-COPY --from=composer:2.1.9 "/usr/bin/composer" "/usr/local/bin/composer"
+COPY --from=composer:2.1.11 "/usr/bin/composer" "/usr/local/bin/composer"
 RUN set -ex; \
   curl -sL https://deb.nodesource.com/setup_14.x | bash -; \
   curl https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry -o /usr/bin/retry; \
