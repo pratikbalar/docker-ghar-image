@@ -25,7 +25,7 @@
     {
       "enabled": true,
       "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
-      "matchUpdateTypes": ["major", "minor", "patch"],
+      "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {
       "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
