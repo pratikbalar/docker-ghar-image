@@ -6,7 +6,7 @@ RUN \
   curl -Lo retry https://raw.githubusercontent.com/kadwanev/retry/0b65e6b7f54ed36b492910470157e180bbcc3c84/retry; \
   curl -Lo kind  https://github.com/kubernetes-sigs/kind/releases/download/v0.11.1/kind-linux-amd64; \
   chmod +x -R /bins/
-FROM docker.io/summerwind/actions-runner-dind:v2.284.0-ubuntu-20.04
+FROM docker.io/summerwind/actions-runner-dind:v2.285.1-ubuntu-20.04
 USER root
 COPY --from=golang    "/usr/local/go/"      "/usr/local/go/"
 COPY --from=composer  "/usr/bin/composer/"  "/usr/local/bin/composer/"
