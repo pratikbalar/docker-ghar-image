@@ -5,18 +5,13 @@
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "commitBody": "Signed-off-by: Pratik Balar <pratikbalar@users.noreply.github.com>",
-  "suppressNotifications": ["prIgnoreNotification"],
   "commitMessageTopic": "{{depName}}",
   "commitMessageExtra": "to {{newVersion}}",
   "commitMessageSuffix": "",
   "regexManagers": [
     {
       "fileMatch": [
-        "Dockerfile",
-        "hack/.+\\.sh$"
-      ],
-      "matchStrings": [
-        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\n.*?_VERSION=(?<currentValue>.*)"
+        "Dockerfile*"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
@@ -24,38 +19,77 @@
   "packageRules": [
     {
       "enabled": true,
-      "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchDatasources": [
+        "docker",
+        "github-releases"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
-      "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
+      "matchDatasources": [
+        "docker",
+        "github-releases"
+      ],
       "semanticCommitScope": "deps",
       "separateMinorPatch": true
     },
     {
-      "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
-      "matchUpdateTypes": ["major"],
+      "matchDatasources": [
+        "docker",
+        "github-releases"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "commitMessagePrefix": "feat(deps): ",
-      "labels": ["dep/major"]
+      "labels": [
+        "dep/major"
+      ]
     },
     {
-      "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
-      "matchUpdateTypes": ["minor"],
+      "matchDatasources": [
+        "docker",
+        "github-releases"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
       "semanticCommitType": "feat",
-      "labels": ["dep/minor"]
+      "labels": [
+        "dep/minor"
+      ]
     },
     {
-      "matchDatasources": ["docker", "github-releases", "pypi", "npm", "repology"],
-      "matchUpdateTypes": ["patch"],
+      "matchDatasources": [
+        "docker",
+        "github-releases"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "labels": ["dep/patch"]
+      "labels": [
+        "dep/patch"
+      ]
     },
     {
-      "matchDatasources": ["docker", "github-releases", "pypi", "npm"],
+      "matchDatasources": [
+        "docker",
+        "github-releases"
+      ],
       "automerge": true,
       "automergeType": "pr",
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchPackagePatterns": [".*"]
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchPackagePatterns": [
+        ".*"
+      ]
     }
   ]
 }
