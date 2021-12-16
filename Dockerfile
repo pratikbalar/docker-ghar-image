@@ -1,5 +1,5 @@
-FROM docker.io/library/golang:1.17-buster as golang
-FROM docker.io/library/composer:2.1.9 as composer
+FROM docker.io/library/golang:1.17.1-buster as golang
+FROM docker.io/library/composer:2.1.14 as composer
 FROM docker.io/docker/buildx-bin:0.7.1 as buildx
 FROM docker.io/summerwind/actions-runner-dind:v2.285.1-ubuntu-20.04
 USER root
