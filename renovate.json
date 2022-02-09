@@ -3,7 +3,7 @@
   "timezone": "Asia/Kolkata",
   "semanticCommits": "enabled",
   "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "dependencyDashboardTitle": "Renovate Dashboardd 🤖",
   "commitBody": "Signed-off-by: Pratik Balar <pratikbalar@users.noreply.github.com>",
   "commitMessageTopic": "{{depName}}",
   "commitMessageExtra": "to {{newVersion}}",
